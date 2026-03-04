@@ -20,7 +20,12 @@ class Product(models.Model):
     image = models.ImageField(
         upload_to="catalog/image", blank=True, null=True, verbose_name="Изображение"
     )
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="products", verbose_name="Категория")
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.CASCADE,
+        related_name="products",
+        verbose_name="Категория",
+    )
     price = models.IntegerField(verbose_name="Цена")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated_at = models.DateTimeField(
@@ -28,12 +33,9 @@ class Product(models.Model):
     )
 
     def __str__(self):
-            return f"{self.name} {self.category}"
+        return f"{self.name} {self.category}"
 
     class Meta:
         verbose_name = "Продукт"
         verbose_name_plural = "Продукты"
         ordering = ["category"]
-
-
-
