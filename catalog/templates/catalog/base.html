@@ -77,7 +77,7 @@ Auto
 </ul>
 </div>
 <header data-bs-theme="dark">
-{% include 'includes/inc_menu.html' %}
+{% include 'catalog/includes/inc_menu.html' %}
 </header>
 <main>
     <section class="py-5 text-center container">
@@ -85,12 +85,12 @@ Auto
             <div class="col-lg-6 col-md-8 mx-auto">
                 <h1 class="fw-light">Каталог товаров</h1>
                 <p class="lead text-body-secondary">Первый магазин электроники</p>
-    <p>
-        <a class="btn btn-primary" href="{% url 'catalog:product_list'%}" role="button">Главная</a>
-    </p>
-</div>
-</div>
-</section>
+                <p>
+                    <a class="btn btn-primary" href="{% url 'catalog:product_create'%}" role="button">Создать товар</a>
+                </p>
+            </div>
+        </div>
+    </section>
 
 {% block content %}
     {% endblock %}
@@ -104,7 +104,7 @@ Auto
         <p class="mb-1">Рады приветствовать вас на нашем сайте!</p>
         <p class="mb-0">Если возникли вопросы, можно написать здесь
             <a href="/">Написать</a> или посмотреть ответы на часто задаваемые вопросы
-            <a href="/docs/5.3/getting-started/introduction">Ответы</a>.</p>
+            <a href="/">Ответы</a>.</p>
     </div>
 </footer>
 <script src="{% static 'js/bootstrap.bundle.min.js' %}" class="astro-vvvwv3sm"></script>

@@ -31,6 +31,7 @@ class Product(models.Model):
     updated_at = models.DateTimeField(
         auto_now=True, verbose_name="Дата последнего изменения"
     )
+    views_counter = models.PositiveIntegerField(verbose_name="Счетчик просмотров", default=0)
 
     def __str__(self):
         return f"{self.name} {self.category}"
