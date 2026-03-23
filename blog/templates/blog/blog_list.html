@@ -11,7 +11,7 @@
                             <div class="card-body">
                                 <p class="card-text">Заголовок: {{ blog.title }}</p>
                                 <p class="card-text">Содержание: {{ blog.content |slice:":100" }}...</p>
-                                <p class="card-text"> {{ blog.image }} </p>
+                                <p class="card-text">Количество просмотров: {{ blog.views_counter }} </p>
                                 <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
                                     <a class="btn btn-primary" href="{% url 'blog:blog_detail' blog.pk %}" role="button">Посмотреть</a>
