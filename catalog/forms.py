@@ -9,7 +9,7 @@ SPAM = ['казино', 'биржа', 'обман', 'криптовалюта', 
 class ProductForm(ModelForm):
     class Meta:
         model = Product
-        exclude = ("views_counter",)
+        exclude = ("views_counter", "owner",)
 
 
     def __init__(self, *args, **kwargs):
@@ -54,3 +54,9 @@ class ProductForm(ModelForm):
             raise ValidationError(
                 f'Запрещенные слова "{", ".join(forbidden_words)}" нельзя использовать в описании продукта')
         return cleaned_data
+
+
+class ProductModeratorForm(ModelForm):
+    class Meta:
+        model = Product
+        fields = ("unpublish_product",)

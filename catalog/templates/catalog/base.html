@@ -75,9 +75,11 @@ Auto
             <div class="col-lg-6 col-md-8 mx-auto">
                 <h1 class="fw-light">Каталог товаров</h1>
                 <p class="lead text-body-secondary">Первый магазин электроники</p>
+                {% if user.is_authenticated %}
                 <p>
                     <a class="btn btn-primary" href="{% url 'catalog:product_create'%}" role="button">Создать товар</a>
                 </p>
+                {% endif %}
             </div>
         </div>
     </section>

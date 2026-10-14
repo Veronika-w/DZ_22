@@ -18,6 +18,14 @@
                                 <div class="btn-group">
                                     <a class="btn btn-primary" href="{% url 'catalog:product_list'%}" role="button">Назад</a>
                                 </div>
+                                {% if 'catalog.can_unpublish_product' in perms %}
+                                    <form action="{% url 'catalog:unpublish_product' product.id %}" method="post">
+                                        {% csrf_token %}
+                                        <textarea name="unpublish_product"></textarea>
+                                        <button type="submit">Отменить публикацию продукта</button>
+                                    </form>
+                                {% endif %}
+                                {% endblock %}
                             </div>
                         </div>
                     </div>
@@ -25,4 +33,3 @@
             </div>
         </div>
     </div>
-{% endblock %}

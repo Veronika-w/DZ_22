@@ -12,7 +12,7 @@ class Command(BaseCommand):
         )
 
         user.set_password('1234')
-
+        user.is_active = True
         user.is_staff = True
         user.is_superuser = True
         user.save()
