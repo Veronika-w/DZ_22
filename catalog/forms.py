@@ -9,11 +9,13 @@ SPAM = ['казино', 'биржа', 'обман', 'криптовалюта', 
 class ProductForm(ModelForm):
     class Meta:
         model = Product
-        exclude = ("views_counter", "owner",)
+        exclude = ("views_counter",
+                   "owner",
+                   "unpublish_product",)
 
 
     def __init__(self, *args, **kwargs):
-        super(ProductForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['name'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Введите наименование товара'})
         self.fields['description'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Введите описание'})
         self.fields['image'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Загрузите изображение'})
@@ -29,31 +31,25 @@ class ProductForm(ModelForm):
 
 
     def clean_name(self):
-        cleaned_data = super().clean()
-        name = cleaned_data.get('name')
-        name_lower = name.lower()
-        forbidden_words = []
-        for word in SPAM:
-            if word.lower() in name_lower:
-                forbidden_words.append(word)
-        if forbidden_words:
-            raise ValidationError(
-                f'Запрещенные слова "{", ".join(forbidden_words)}" нельзя использовать в названии продукта')
-        return cleaned_data
+        name = self.cleaned_data.get("name")
+        if name:
+            forbidden = [w for w in SPAM if w.lower() in name.lower()]
+            if forbidden:
+                raise ValidationError(
+                    f'Запрещенные слова "{", ".join(forbidden)}" нельзя использовать в названии продукта'
+                )
+        return name
 
 
     def clean_description(self):
-        cleaned_data = super().clean()
-        description = cleaned_data.get('description')
-        description_lower = description.lower()
-        forbidden_words = []
-        for word in SPAM:
-            if word.lower() in description_lower:
-                forbidden_words.append(word)
-        if forbidden_words:
-            raise ValidationError(
-                f'Запрещенные слова "{", ".join(forbidden_words)}" нельзя использовать в описании продукта')
-        return cleaned_data
+        name = self.cleaned_data.get("description")
+        if name:
+            forbidden = [w for w in SPAM if w.lower() in name.lower()]
+            if forbidden:
+                raise ValidationError(
+                    f'Запрещенные слова "{", ".join(forbidden)}" нельзя использовать в описании продукта'
+                )
+        return name
 
 
 class ProductModeratorForm(ModelForm):

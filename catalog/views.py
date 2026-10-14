@@ -10,16 +10,16 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class UnpublishProductView(LoginRequiredMixin, View):
-    def post(self, request, product_id):
-        product = get_object_or_404(Product, id=product_id)
+    def post(self, request, pk):
+        product = get_object_or_404(Product, id=pk)
 
         if not request.user.has_perm('catalog.can_unpublish_product'):
             return HttpResponseForbidden('У вас нет прав отменить публикацию продукта.')
 
-        product.unpublish_product = request.POST.get('unpublish_product')
+        product.unpublish_product = False
         product.save()
 
-        return redirect('catalog:product_detail', pk=product_id)
+        return redirect('catalog:product_detail', pk=pk)
 
 
 class ProductListView(ListView):

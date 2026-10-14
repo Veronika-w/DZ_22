@@ -21,7 +21,6 @@
                                 {% if 'catalog.can_unpublish_product' in perms %}
                                     <form action="{% url 'catalog:unpublish_product' product.id %}" method="post">
                                         {% csrf_token %}
-                                        <textarea name="unpublish_product"></textarea>
                                         <button type="submit">Отменить публикацию продукта</button>
                                     </form>
                                 {% endif %}
