@@ -34,7 +34,7 @@ class Product(models.Model):
         auto_now=True, verbose_name="Дата последнего изменения"
     )
     views_counter = models.PositiveIntegerField(verbose_name="Счетчик просмотров", default=0)
-    unpublish_product = models.BooleanField(verbose_name="Отменить публикацию продукта", null=True, blank=True)
+    unpublish_product = models.CharField(verbose_name="Отменить публикацию продукта", default="Не опубликован", null=True, blank=True)
 
     owner = models.ForeignKey(User, verbose_name='Владелец', help_text='Укажите владельца продукта', blank=True, null=True, on_delete=models.SET_NULL)
 

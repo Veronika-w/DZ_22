@@ -16,7 +16,7 @@ class UnpublishProductView(LoginRequiredMixin, View):
         if not request.user.has_perm('catalog.can_unpublish_product'):
             return HttpResponseForbidden('У вас нет прав отменить публикацию продукта.')
 
-        product.unpublish_product = True
+        product.unpublish_product = request.POST.get('unpublish_product')
         product.save()
 
         return redirect('catalog:product_detail', pk=product_id)
