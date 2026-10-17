@@ -7,6 +7,11 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from catalog.forms import ProductForm, ProductModeratorForm
 from catalog.models import Product
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
+from django.core.cache import cache
+
+from catalog.services import get_products_from_cache
 
 
 class UnpublishProductView(LoginRequiredMixin, View):
@@ -24,6 +29,9 @@ class UnpublishProductView(LoginRequiredMixin, View):
 
 class ProductListView(ListView):
     model = Product
+
+    def get_queryset(self):
+        return get_products_from_cache()
 
 
 class ProductDetailView(DetailView):
@@ -81,10 +89,15 @@ class ProductDeleteView(LoginRequiredMixin, DeleteView):
         raise PermissionDenied
 
 
+# 1. ГЛОБАЛЬНЫЙ ПАТЧ: Отключаем RESP3/HELLO и уведомления об обслуживании для старого Redis на Windows
+from redis.connection import Connection
 
-# def  home(request):
-#     return render(request, 'home.html')
-#
-#
-# def  contacts(request):
-#     return render(request, 'contacts.html')
+# Отключаем проверку уведомлений об обслуживании, которая вызывает RedisError
+Connection._configure_maintenance_notifications = lambda *args, **kwargs: None
+
+# Перехватываем инициализацию соединения и принудительно задаем протокол RESP2
+original_init = Connection.__init__
+def patched_init(self, *args, **kwargs):
+    kwargs['protocol'] = 2  # Блокирует команду HELLO
+    original_init(self, *args, **kwargs)
+Connection.__init__ = patched_init
