@@ -125,6 +125,9 @@ if CACHE_ENABLE:
     CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': os.getenv('LOCATION')
+        'LOCATION': os.getenv('LOCATION', 'redis://127.0.0.1:6379/1'),
+        "OPTIONS": {
+            "protocol": 2,
+        },
     }
 }

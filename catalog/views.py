@@ -99,16 +99,3 @@ class ProductDeleteView(LoginRequiredMixin, DeleteView):
             return ProductModeratorForm
         raise PermissionDenied
 
-
-# 1. ГЛОБАЛЬНЫЙ ПАТЧ: Отключаем RESP3/HELLO и уведомления об обслуживании для старого Redis на Windows
-from redis.connection import Connection
-
-# Отключаем проверку уведомлений об обслуживании, которая вызывает RedisError
-Connection._configure_maintenance_notifications = lambda *args, **kwargs: None
-
-# Перехватываем инициализацию соединения и принудительно задаем протокол RESP2
-original_init = Connection.__init__
-def patched_init(self, *args, **kwargs):
-    kwargs['protocol'] = 2  # Блокирует команду HELLO
-    original_init(self, *args, **kwargs)
-Connection.__init__ = patched_init

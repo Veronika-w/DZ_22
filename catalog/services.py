@@ -17,11 +17,24 @@ def get_products_from_cache():
     return products
 
 
+CATEGORY_CACHE_TIMEOUT = 60
+
+
 class ProductService:
 
     @staticmethod
-    def get_products_category(category_id):
-        products_category = Product.objects.filter(category_id=category_id)
-        if not products_category.exists():
-            return None
-        return products_category
+    def get_products_category(category_id: int):
+        cache_key = f"category_{category_id}"
+        products = cache.get(cache_key)
+
+        if products is None:
+            products = list(
+                Product.objects.filter(category_id=category_id)
+            )
+            cache.set(
+                cache_key,
+                products,
+                timeout=CATEGORY_CACHE_TIMEOUT,
+            )
+
+        return products
