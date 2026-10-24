@@ -1,6 +1,6 @@
 from django.core.cache import cache
 
-from .models import Product, Category
+from .models import Product,Category
 from config.settings import CACHE_ENABLE
 
 
@@ -15,3 +15,13 @@ def get_products_from_cache():
     products = Product.objects.all()
     cache.set(key, products)
     return products
+
+
+class ProductService:
+
+    @staticmethod
+    def get_products_category(category_id):
+        products_category = Product.objects.filter(category_id=category_id)
+        if not products_category.exists():
+            return None
+        return products_category

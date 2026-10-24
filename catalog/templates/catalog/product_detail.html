@@ -17,6 +17,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
                                     <a class="btn btn-primary" href="{% url 'catalog:product_list'%}" role="button">Назад</a>
+                                    <a class="btn btn-secondary" href="{% url 'catalog:products_by_category' object.category.id %}" role="button">Другие товары в данной категории</a>
                                 </div>
                                 {% if 'catalog.can_unpublish_product' in perms %}
                                     <form action="{% url 'catalog:unpublish_product' product.id %}" method="post">

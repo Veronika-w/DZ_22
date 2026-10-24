@@ -1,17 +1,17 @@
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseForbidden
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, View
 
 from catalog.forms import ProductForm, ProductModeratorForm
-from catalog.models import Product
+from catalog.models import Product, Category
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
 from django.core.cache import cache
 
-from catalog.services import get_products_from_cache
+from catalog.services import get_products_from_cache, ProductService
 
 
 class UnpublishProductView(LoginRequiredMixin, View):
@@ -25,6 +25,17 @@ class UnpublishProductView(LoginRequiredMixin, View):
         product.save()
 
         return redirect('catalog:product_detail', pk=pk)
+
+
+class CategoryListView(ListView):
+    model = Product
+    template_name = 'catalog/products_by_category.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        category_id = self.kwargs.get('category_id')
+        context['products_category'] = ProductService.get_products_category(category_id)
+        return context
 
 
 class ProductListView(ListView):
