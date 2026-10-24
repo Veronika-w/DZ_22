@@ -1,14 +1,19 @@
+import os
+from dotenv import load_dotenv
 from pathlib import Path
 
-from django.conf.global_settings import STATICFILES_DIRS
+
+load_dotenv(override=True)
+from django.conf.global_settings import STATICFILES_DIRS, DEFAULT_AUTO_FIELD, MEDIA_URL, AUTH_USER_MODEL, \
+    LOGIN_REDIRECT_URL, LOGOUT_REDIRECT_URL
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-6^h!rizockok_55x-v)#0%a__3pau$p5o@6!4+_2um4byw#90&'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
-DEBUG = True
+DEBUG = os.getenv('DEBUG', False) == 'True'
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -18,6 +23,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'catalog',
+    'blog',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -51,10 +58,15 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('NAME'),
+        'USER': os.getenv('USER'),
+        'PASSWORD': os.getenv('PASSWORD'),
+        'HOST': os.getenv('HOST'),
+        'PORT': os.getenv('PORT'),
     }
 }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -82,3 +94,40 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = (BASE_DIR / 'static',)
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MEDIA_URL = 'media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+AUTH_USER_MODEL = 'users.User'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', False) == 'True'
+EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL', False) == 'True'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+LOGIN_REDIRECT_URL = 'catalog:product_list'
+
+LOGIN_URL = 'users:login'
+
+LOGOUT_REDIRECT_URL = 'catalog:product_list'
+
+CACHE_ENABLE = True
+if CACHE_ENABLE:
+    CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': os.getenv('LOCATION', 'redis://127.0.0.1:6379/1'),
+        "OPTIONS": {
+            "protocol": 2,
+        },
+    }
+}

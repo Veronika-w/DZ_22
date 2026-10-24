@@ -1,0 +1,35 @@
+{% extends 'catalog/base.html' %}
+{% load my_tags %}
+{% block content %}
+<div class="album py-5 bg-body-tertiary">
+        <div class="container">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                <div class="col">
+                    <div class="card shadow-sm">
+                         <img src="{{ object.image | media_filter }}">
+                            <div class="card-body">
+                                <p class="card-text">Наименование: {{ object.name }}</p>
+                                <p class="card-text">Описание: {{ object.description }}</p>
+                                <p class="card-text">Цена: {{ object.price }} рублей</p>
+                                <p class="card-text">Категория: {{ object.category }} </p>
+                                <p class="card-text">Дата создания: {{ object.created_at }} </p>
+                                <p class="card-text">Дата последнего изменения: {{ object.updated_at }} </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <a class="btn btn-primary" href="{% url 'catalog:product_list'%}" role="button">Назад</a>
+                                    <a class="btn btn-secondary" href="{% url 'catalog:products_by_category' object.category.id %}" role="button">Другие товары в данной категории</a>
+                                </div>
+                                {% if 'catalog.can_unpublish_product' in perms %}
+                                    <form action="{% url 'catalog:unpublish_product' product.id %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit">Отменить публикацию продукта</button>
+                                    </form>
+                                {% endif %}
+                                {% endblock %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

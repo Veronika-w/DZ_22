@@ -1,0 +1,21 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <form class="row" method="post" enctype="multipart/form-data">
+                <div class="card">
+                    <p class="card-text">Вы действительно хотите удалить: {{ object.title }}</p>
+                    <div class="card-body">
+                        {% csrf_token %}
+                    </div>
+                    <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">Удалить</button>
+                    <a class="btn btn-primary" href="{% url 'blog:blog_list' %}" role="button">Отменить</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
